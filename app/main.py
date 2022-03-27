@@ -31,4 +31,4 @@ app.include_router(vote.router)
 
 @app.get("/")
 def root():
-    return {"message":"Hello FastAPI Demo"}
+    return {"message":"Hello FastAPI Demo - GitHub CI/CD"}
