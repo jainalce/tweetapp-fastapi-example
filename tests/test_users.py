@@ -1,20 +1,9 @@
 from itsdangerous import json
 import pytest
 from app import schemas
-from .database import client, session
 import pytest
 from jose import JWTError, jwt
 from app.config import settings
-
-@pytest.fixture
-def test_user(client):
-    user_data = {"email":"jainalce@gmail.com",
-                "password":"password123"}
-    res = client.post("/users/", json = user_data)
-    new_user = res.json()
-    new_user['password'] = user_data['password']
-    assert res.status_code == 201
-    return new_user
 
 def test_create_user(client):
     res = client.post("/users/",json={"email":"hello1243@gmail.com","password":"password123"})
@@ -30,3 +19,10 @@ def test_login_user(client,test_user):
     assert id == test_user["id"]
     assert login_res.token_type == "bearer"
     assert res.status_code == 200
+
+@pytest.mark.parametrize("email,password,status_code",[("jainal@gmail.com","test123",403),
+                                                        ("test@gmail.com","password123",403)])
+def test_incorrect_login(test_user,client,email,password,status_code):
+    res = client.post("/login",data={"username":email,"password":password})
+    assert res.status_code == status_code
+    assert res.json().get('detail') == 'Invalid Credentials'
