@@ -12,5 +12,13 @@ jobs:
         uses: actions/checkout@v2
       - name: say hi to Jainal
         run:  echo "hello Jainal"
+      - name: install python version 3.9
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.9"
+      - name: update pip
+        run: python -m pip install --upgrade pip
+      - name: install all dependencies
+        run: pip install -r requirements.txt
 
     
